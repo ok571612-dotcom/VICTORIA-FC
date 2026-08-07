@@ -1,150 +1,690 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Victoria FC - Squad</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
+<title>Victoria FC | Official Squad</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    color:white;
+    background:#020202;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:-50%;
+    z-index:-2;
+    background:
+        radial-gradient(circle at 15% 20%,rgba(255,0,0,.22),transparent 27%),
+        radial-gradient(circle at 85% 80%,rgba(255,0,0,.17),transparent 30%),
+        radial-gradient(circle at 50% 50%,rgba(120,0,0,.12),transparent 35%);
+    animation:bgMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes bgMove{
+    from{transform:translate(-5%,-5%) scale(1);}
+    to{transform:translate(5%,5%) scale(1.12);}
+}
+
+.container{
+    width:100%;
+    max-width:540px;
+    margin:auto;
+    padding:20px 15px 45px;
+}
+
+/* HEADER */
+
+.header{
+    text-align:center;
+    padding:30px 0 25px;
+}
+
+.header h1{
+    margin:0;
+    font-size:34px;
+    letter-spacing:5px;
+    text-shadow:0 0 20px rgba(255,0,0,.5);
+}
+
+.header h1 span{
+    color:#ff1515;
+}
+
+.header p{
+    margin-top:9px;
+    color:#777;
+    font-size:10px;
+    letter-spacing:3px;
+}
+
+/* CAPTAIN / VC */
+
+.leader-section{
+    display:grid;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.leader-card{
+    padding:17px;
+    text-align:center;
+    border-radius:16px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(255,255,255,.08),
+        rgba(255,255,255,.025)
+    );
+
+    border:1px solid rgba(255,255,255,.08);
+    border-left:3px solid #ff1515;
+
+    backdrop-filter:blur(12px);
+}
+
+.leader-title{
+    color:#ff2020;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.leader-name{
+    margin-top:7px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.leader-position{
+    margin-top:5px;
+    color:#777;
+    font-size:11px;
+}
+
+/* FORMATION */
+
+.formation-title{
+    text-align:center;
+    margin:25px 0 15px;
+}
+
+.formation-title h2{
+    margin:0;
+    color:#ff1515;
+    font-size:18px;
+    letter-spacing:3px;
+}
+
+.formation-title p{
+    margin:7px 0 0;
+    color:#666;
+    font-size:11px;
+    letter-spacing:2px;
+}
+
+/* PITCH */
+
+.pitch{
+    position:relative;
+    width:100%;
+    aspect-ratio:.62;
+    overflow:hidden;
+
+    border-radius:22px;
+    border:2px solid rgba(255,255,255,.15);
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #071b0c 0px,
+            #071b0c 45px,
+            #092411 45px,
+            #092411 90px
+        );
+
+    box-shadow:0 20px 60px rgba(0,0,0,.65);
+}
+
+.pitch::before{
+    content:"";
+    position:absolute;
+    inset:6% 7%;
+    border:1px solid rgba(255,255,255,.35);
+}
+
+.center-line{
+    position:absolute;
+    left:7%;
+    right:7%;
+    top:50%;
+    border-top:1px solid rgba(255,255,255,.35);
+}
+
+.center-circle{
+    position:absolute;
+    width:24%;
+    aspect-ratio:1;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:50%;
+}
+
+/* PLAYER */
+
+.player{
+    position:absolute;
+    width:80px;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    z-index:2;
+}
+
+.player-card{
+    width:55px;
+    height:55px;
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:linear-gradient(145deg,#202020,#050505);
+
+    border:2px solid rgba(255,0,0,.7);
+
+    box-shadow:0 0 18px rgba(255,0,0,.22);
+
+    font-size:9px;
+    font-weight:bold;
+    padding:4px;
+}
+
+.player-name{
+    margin-top:5px;
+    font-size:9px;
+    font-weight:bold;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-pos{
+    margin-top:2px;
+    color:#ff3333;
+    font-size:8px;
+    letter-spacing:1px;
+}
+
+/* POSITIONS */
+
+/* GK */
+
+.gk{
+    left:50%;
+    top:91%;
+}
+
+/* DEFENCE */
+
+.lb{
+    left:20%;
+    top:73%;
+}
+
+.cb{
+    left:50%;
+    top:73%;
+}
+
+.rb{
+    left:80%;
+    top:73%;
+}
+
+/* MIDFIELD */
+
+.cdm{
+    left:38%;
+    top:58%;
+}
+
+.cm{
+    left:62%;
+    top:58%;
+}
+
+/* ATTACK */
+
+.lw{
+    left:20%;
+    top:41%;
+}
+
+.cam{
+    left:50%;
+    top:41%;
+}
+
+.rw{
+    left:80%;
+    top:41%;
+}
+
+/* STRIKERS */
+
+.st1{
+    left:38%;
+    top:22%;
+}
+
+.st2{
+    left:62%;
+    top:22%;
+}
+
+/* PLAYERS LIST */
+
+.players-section{
+    margin-top:32px;
+}
+
+.players-section h2{
+    margin-bottom:15px;
+    text-align:center;
+    color:#ff1515;
+    font-size:18px;
+    letter-spacing:3px;
+}
+
+.player-list{
+    display:grid;
+    gap:10px;
+}
+
+.list-player{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.045);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    backdrop-filter:blur(10px);
+}
+
+.list-name{
+    font-size:14px;
+    font-weight:bold;
+}
+
+.list-position{
+    color:#888;
+    font-size:11px;
+}
+
+.empty{
+    padding:30px;
+    text-align:center;
+    color:#666;
+}
+
+.footer{
+    margin-top:35px;
+    text-align:center;
+    color:#555;
+    font-size:10px;
+    letter-spacing:2px;
+}
+
+@media(max-width:380px){
+
+    .player{
+        width:68px;
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255, 0, 0, 0.16), transparent 35%),
-        #000;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 25px 15px;
+    .player-card{
+        width:49px;
+        height:49px;
     }
 
-    .container {
-      max-width: 600px;
-      margin: auto;
+    .player-name{
+        font-size:8px;
     }
-
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .logo {
-      width: 130px;
-      max-width: 45%;
-      filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.35));
-    }
-
-    h1 {
-      margin: 10px 0 5px;
-      letter-spacing: 3px;
-    }
-
-    .subtitle {
-      color: #888;
-      font-size: 12px;
-      letter-spacing: 2px;
-    }
-
-    .player {
-      background: rgba(18, 18, 18, 0.9);
-      border: 1px solid #292929;
-      border-left: 4px solid red;
-      border-radius: 14px;
-      padding: 18px;
-      margin: 14px 0;
-      box-shadow: 0 5px 20px rgba(255, 0, 0, 0.08);
-    }
-
-    .name {
-      font-size: 21px;
-      font-weight: bold;
-    }
-
-    .info {
-      color: #aaa;
-      margin-top: 8px;
-      font-size: 14px;
-    }
-
-    .position {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      background: #222;
-      color: #ff3030;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .role {
-      display: inline-block;
-      margin-top: 10px;
-      margin-right: 5px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      background: #181818;
-      color: white;
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .empty {
-      text-align: center;
-      color: #777;
-      margin-top: 50px;
-    }
-
-    .back {
-      display: block;
-      text-align: center;
-      margin-top: 30px;
-      color: #999;
-      text-decoration: none;
-      font-size: 13px;
-    }
-
-    .back:hover {
-      color: red;
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <div class="header">
+<!-- HEADER -->
 
-    <img
-      src="logo.png"
-      class="logo"
-      alt="Victoria FC Logo"
-    >
+<div class="header">
 
-    <h1>VICTORIA FC</h1>
+<h1>
+VICTORIA <span>FC</span>
+</h1>
 
-    <div class="subtitle">
-      OFFICIAL SQUAD
-    </div>
-
-  </div>
-
-  <div id="players">
-
-    <div class="empty">
-      Loading squad...
-    </div>
-
-  </div>
-
-  <a href="index.html" class="back">
-    ← Back to Home
-  </a>
+<p>OFFICIAL SQUAD</p>
 
 </div>
+
+
+<!-- CAPTAIN / VC -->
+
+<div class="leader-section">
+
+<div class="leader-card">
+
+<div class="leader-title">
+👑 CAPTAIN
+</div>
+
+<div class="leader-name" id="captainName">
+Not Selected
+</div>
+
+<div class="leader-position" id="captainPosition">
+-
+</div>
+
+</div>
+
+
+<div class="leader-card">
+
+<div class="leader-title">
+⭐ VICE CAPTAIN
+</div>
+
+<div class="leader-name" id="viceName">
+Not Selected
+</div>
+
+<div class="leader-position" id="vicePosition">
+-
+</div>
+
+</div>
+
+</div>
+
+
+<!-- FORMATION -->
+
+<div class="formation-title">
+
+<h2>FORMATION</h2>
+
+<p>3 - 2 - 3 - 2</p>
+
+</div>
+
+
+<!-- PITCH -->
+
+<div class="pitch">
+
+<div class="center-line"></div>
+<div class="center-circle"></div>
+
+
+<!-- GK -->
+
+<div class="player gk">
+
+<div class="player-card">
+GK
+</div>
+
+<div class="player-name" id="gkName">
+-
+</div>
+
+<div class="player-pos">
+GK
+</div>
+
+</div>
+
+
+<!-- LB -->
+
+<div class="player lb">
+
+<div class="player-card">
+LB
+</div>
+
+<div class="player-name" id="lbName">
+-
+</div>
+
+<div class="player-pos">
+LB
+</div>
+
+</div>
+
+
+<!-- CB -->
+
+<div class="player cb">
+
+<div class="player-card">
+CB
+</div>
+
+<div class="player-name" id="cbName">
+-
+</div>
+
+<div class="player-pos">
+CB
+</div>
+
+</div>
+
+
+<!-- RB -->
+
+<div class="player rb">
+
+<div class="player-card">
+RB
+</div>
+
+<div class="player-name" id="rbName">
+-
+</div>
+
+<div class="player-pos">
+RB
+</div>
+
+</div>
+
+
+<!-- CDM -->
+
+<div class="player cdm">
+
+<div class="player-card">
+CDM
+</div>
+
+<div class="player-name" id="cdmName">
+-
+</div>
+
+<div class="player-pos">
+CDM
+</div>
+
+</div>
+
+
+<!-- CM -->
+
+<div class="player cm">
+
+<div class="player-card">
+CM
+</div>
+
+<div class="player-name" id="cmName">
+-
+</div>
+
+<div class="player-pos">
+CM
+</div>
+
+</div>
+
+
+<!-- LW -->
+
+<div class="player lw">
+
+<div class="player-card">
+LW
+</div>
+
+<div class="player-name" id="lwName">
+-
+</div>
+
+<div class="player-pos">
+LW
+</div>
+
+</div>
+
+
+<!-- CAM -->
+
+<div class="player cam">
+
+<div class="player-card">
+CAM
+</div>
+
+<div class="player-name" id="camName">
+-
+</div>
+
+<div class="player-pos">
+CAM
+</div>
+
+</div>
+
+
+<!-- RW -->
+
+<div class="player rw">
+
+<div class="player-card">
+RW
+</div>
+
+<div class="player-name" id="rwName">
+-
+</div>
+
+<div class="player-pos">
+RW
+</div>
+
+</div>
+
+
+<!-- ST 1 -->
+
+<div class="player st1">
+
+<div class="player-card">
+ST
+</div>
+
+<div class="player-name" id="st1Name">
+-
+</div>
+
+<div class="player-pos">
+ST
+</div>
+
+</div>
+
+
+<!-- ST 2 -->
+
+<div class="player st2">
+
+<div class="player-card">
+ST
+</div>
+
+<div class="player-name" id="st2Name">
+-
+</div>
+
+<div class="player-pos">
+ST
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PLAYERS -->
+
+<div class="players-section">
+
+<h2>⚽ PLAYERS</h2>
+
+<div class="player-list" id="players">
+
+<div class="empty">
+Loading Players...
+</div>
+
+</div>
+
+</div>
+
+
+<div class="footer">
+ONE TEAM • ONE VISION • VICTORIA
+</div>
+
+</div>
+
 
 <script type="module" src="squad.js"></script>
 
