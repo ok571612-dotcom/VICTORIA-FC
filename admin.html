@@ -1,102 +1,340 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Victoria FC Admin Panel</title>
+
+<meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Victoria FC | Admin Panel</title>
+
 <style>
+
+*{
+    box-sizing:border-box;
+}
+
 body{
-  font-family:Arial,sans-serif;
-  background:#000;
-  color:white;
-  padding:20px;
+    margin:0;
+    padding:20px;
+    min-height:100vh;
+    background:#020202;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
 }
 
 h1{
-  color:red;
-  text-align:center;
+    text-align:center;
+    color:#ff1744;
+    letter-spacing:3px;
+    margin-bottom:30px;
 }
 
 h2{
-  margin-top:35px;
-  color:#fff;
+    color:#ff1744;
+    font-size:18px;
+    letter-spacing:2px;
+    margin-top:30px;
 }
 
 .card{
-  background:#111;
-  padding:18px;
-  margin:15px 0;
-  border-radius:12px;
-  border:1px solid #292929;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.06),
+            rgba(255,0,40,.025)
+        );
+
+    border:1px solid rgba(255,0,40,.15);
+
+    border-radius:16px;
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.4);
+}
+
+label{
+    display:block;
+
+    margin-top:14px;
+
+    color:#aaa;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+    font-weight:bold;
+}
+
+input,
+select{
+
+    width:100%;
+
+    margin-top:7px;
+
+    padding:13px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:9px;
+
+    background:#111;
+
+    border:1px solid #292929;
+
+    color:white;
+
+    font-size:14px;
+}
+
+input:focus,
+select:focus{
+
+    border-color:#ff1744;
+
+    box-shadow:
+        0 0 15px rgba(255,0,40,.12);
 }
 
 button{
-  padding:10px 14px;
-  margin:5px 3px;
-  border:none;
-  border-radius:8px;
-  color:white;
-  font-weight:bold;
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    color:white;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d90035,
+            #620014
+        );
+
+    box-shadow:
+        0 0 20px rgba(255,0,40,.15);
+
+    transition:.3s;
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 0 30px rgba(255,0,40,.3);
+}
+
+.message{
+
+    text-align:center;
+
+    margin-top:15px;
+
+    font-size:12px;
+
+    color:#777;
+}
+
+.success{
+    color:#00ff66;
+}
+
+.error{
+    color:#ff334f;
+}
+
+
+/* APPLICATIONS */
+
+.application-card{
+
+    background:#0b0b0b;
+
+    border:
+        1px solid #202020;
+
+    border-radius:12px;
+
+    padding:16px;
+
+    margin-top:12px;
+}
+
+.application-card h3{
+
+    margin-top:0;
+
+    color:#ff1744;
+}
+
+.application-card p{
+
+    color:#aaa;
+
+    font-size:12px;
+
+    line-height:1.6;
 }
 
 .accept{
-  background:green;
+    background:#087f35;
 }
 
 .reject{
-  background:red;
-}
-
-.squad{
-  background:#8b0000;
+    background:#a50022;
 }
 
 .remove{
-  background:#555;
+    background:#333;
 }
 
-select,input{
-  padding:10px;
-  width:100%;
-  margin-top:8px;
-  border-radius:8px;
-  border:none;
-}
-
-.status{
-  font-weight:bold;
-}
-
-.approved{
-  color:#00ff66;
-}
-
-.rejected{
-  color:#ff3333;
-}
-
-.pending{
-  color:#ffaa00;
-}
 </style>
+
 </head>
+
 
 <body>
 
-<h1>VICTORIA FC ADMIN</h1>
 
-<h2>Applications</h2>
+<div class="container">
+
+
+<h1>
+VICTORIA FC ADMIN
+</h1>
+
+
+<!-- =========================================
+     WEBSITE STATS
+========================================= -->
+
+<h2>
+WEBSITE STATS
+</h2>
+
+
+<div class="card">
+
+
+<label>
+TOTAL TEAM MEMBERS
+</label>
+
+<input
+    type="number"
+    id="totalMembers"
+    min="0"
+    placeholder="Enter total team members">
+
+
+<label>
+MATCHES PLAYED
+</label>
+
+<input
+    type="number"
+    id="matchesPlayed"
+    min="0"
+    placeholder="Enter matches played">
+
+
+<label>
+BEST PLAYERS
+</label>
+
+<input
+    type="number"
+    id="bestPlayers"
+    min="0"
+    placeholder="Enter best players">
+
+
+<button
+    onclick="saveStats()">
+
+    SAVE WEBSITE STATS
+
+</button>
+
+
+<div
+    id="statsMessage"
+    class="message">
+
+</div>
+
+
+</div>
+
+
+<!-- =========================================
+     APPLICATIONS
+========================================= -->
+
+<h2>
+APPLICATIONS
+</h2>
+
 
 <div id="applications">
+
 Loading Applications...
+
 </div>
 
-<h2>Squad Management</h2>
+
+<!-- =========================================
+     SQUAD
+========================================= -->
+
+<h2>
+SQUAD MANAGEMENT
+</h2>
+
 
 <div id="squadPlayers">
+
 Loading Squad...
+
 </div>
 
-<script type="module" src="admin.js"></script>
 
-</
+</div>
+
+
+<script
+    type="module"
+    src="admin.js">
+</script>
+
+
+</body>
+
+</html>
