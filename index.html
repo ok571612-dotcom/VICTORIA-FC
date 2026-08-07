@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Victoria FC</title>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+
+body{
+
+margin:0;
+
+min-height:100vh;
+
+font-family:Arial, sans-serif;
+
+color:white;
+
+overflow-x:hidden;
+
+
+/* LIVE BACKGROUND */
+
+background:
+radial-gradient(circle at 20% 20%, rgba(255,0,0,0.25), transparent 30%),
+radial-gradient(circle at 80% 80%, rgba(255,0,0,0.18), transparent 30%),
+linear-gradient(135deg,#000,#140000,#000);
+
+
+animation:bgMove 8s infinite alternate;
+
+}
+
+
+
+@keyframes bgMove{
+
+0%{
+background-position:0% 0%;
+}
+
+100%{
+background-position:100% 100%;
+}
+
+}
+
+
+
+.container{
+
+max-width:450px;
+
+margin:auto;
+
+padding:25px;
+
+}
+
+
+
+.header{
+
+text-align:center;
+
+padding:40px 0;
+
+}
+
+
+
+.header h1{
+
+font-size:42px;
+
+letter-spacing:8px;
+
+color:red;
+
+margin:0;
+
+text-shadow:
+0 0 15px red;
+
+}
+
+
+
+.header p{
+
+color:#aaa;
+
+letter-spacing:3px;
+
+font-size:13px;
+
+}
+
+
+
+
+.card{
+
+display:block;
+
+text-decoration:none;
+
+color:white;
+
+
+background:
+
+linear-gradient(
+145deg,
+#151515,
+#050505
+);
+
+
+padding:22px;
+
+margin:18px 0;
+
+
+border-radius:18px;
+
+
+border-left:5px solid red;
+
+
+box-shadow:
+
+0 0 20px rgba(255,0,0,0.15);
+
+
+transition:.3s;
+
+
+}
+
+
+
+.card:hover{
+
+transform:translateY(-5px);
+
+
+box-shadow:
+
+0 0 30px rgba(255,0,0,0.5);
+
+
+}
+
+
+
+.icon{
+
+font-size:30px;
+
+margin-bottom:10px;
+
+}
+
+
+
+.title{
+
+font-size:20px;
+
+font-weight:bold;
+
+}
+
+
+
+.text{
+
+margin-top:8px;
+
+color:#999;
+
+font-size:14px;
+
+line-height:1.5;
+
+}
+
+
+
+.footer{
+
+text-align:center;
+
+margin-top:50px;
+
+color:#666;
+
+font-size:12px;
+
+letter-spacing:1px;
+
+}
+
+
+.footer span{
+
+color:red;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="container">
+
+
+
+<div class="header">
+
+<h1>
+VICTORIA FC
+</h1>
+
+
+<p>
+OFFICIAL FOOTBALL CLUB
+</p>
+
+
+</div>
+
+
+
+
+
+<a href="apply.html" class="card">
+
+
+<div class="icon">
+📝
+</div>
+
+
+<div class="title">
+Apply for Victoria FC
+</div>
+
+
+<div class="text">
+Submit your player application and become part of Victoria FC.
+</div>
+
+
+</a>
+
+
+
+
+
+
+<a href="status.html" class="card">
+
+
+<div class="icon">
+🔎
+</div>
+
+
+<div class="title">
+Check Application Status
+</div>
+
+
+<div class="text">
+Track your application using your Application ID.
+</div>
+
+
+</a>
+
+
+
+
+
+
+
+<a href="squad.html" class="card">
+
+
+<div class="icon">
+⚽
+</div>
+
+
+<div class="title">
+Official Victoria FC Squad
+</div>
+
+
+<div class="text">
+View selected players of Victoria FC.
+</div>
+
+
+</a>
+
+
+
+
+
+
+
+<div class="footer">
+
+
+OFFICIAL ACCOUNT OF <span>VICTORIA FC</span>
+
+
+<br><br>
+
+
+ONE TEAM • ONE VISION • VICTORIA
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Victoria FC Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#000;
+  color:white;
+  padding:20px;
+}
+
+h1{
+  color:red;
+  text-align:center;
+}
+
+h2{
+  margin-top:35px;
+  color:#fff;
+}
+
+.card{
+  background:#111;
+  padding:18px;
+  margin:15px 0;
+  border-radius:12px;
+  border:1px solid #292929;
+}
+
+button{
+  padding:10px 14px;
+  margin:5px 3px;
+  border:none;
+  border-radius:8px;
+  color:white;
+  font-weight:bold;
+}
+
+.accept{
+  background:green;
+}
+
+.reject{
+  background:red;
+}
+
+.squad{
+  background:#8b0000;
+}
+
+.remove{
+  background:#555;
+}
+
+select,input{
+  padding:10px;
+  width:100%;
+  margin-top:8px;
+  border-radius:8px;
+  border:none;
+}
+
+.status{
+  font-weight:bold;
+}
+
+.approved{
+  color:#00ff66;
+}
+
+.rejected{
+  color:#ff3333;
+}
+
+.pending{
+  color:#ffaa00;
+}
+</style>
+</head>
+
+<body>
+
+<h1>VICTORIA FC ADMIN</h1>
+
+<h2>Applications</h2>
+
+<div id="applications">
+Loading Applications...
+</div>
+
+<h2>Squad Management</h2>
+
+<div id="squadPlayers">
+Loading Squad...
+</div>
+
+<script type="module" src="admin.js"></script>
+
+</
