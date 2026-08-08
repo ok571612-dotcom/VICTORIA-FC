@@ -50,7 +50,7 @@ async function loadSquad(){
     playersBox.innerHTML = "";
 
 
-    /* CLEAR OLD POSITIONS */
+    /* CLEAR POSITIONS */
 
     const ids = [
 
@@ -97,9 +97,9 @@ async function loadSquad(){
 
       CDM: [],
       CM: [],
+      CAM: [],
 
       LW: [],
-      CAM: [],
       RW: [],
 
       ST: []
@@ -119,7 +119,7 @@ async function loadSquad(){
         docSnap.data();
 
 
-      /* ONLY ACCEPTED + SQUAD PLAYERS */
+      /* ONLY ACCEPTED + SQUAD */
 
       if(
         player.status !== "Accepted" ||
@@ -135,7 +135,7 @@ async function loadSquad(){
         player.name || "Player";
 
 
-      const position =
+      let position =
         (
           player.positionAssigned || ""
         )
@@ -145,6 +145,59 @@ async function loadSquad(){
 
       const role =
         player.role || "Player";
+
+
+      /* =================================
+         CONVERT ADMIN POSITION NAMES
+      ================================= */
+
+      const positionMap = {
+
+        "GOALKEEPER": "GK",
+        "GK": "GK",
+
+        "LEFT BACK": "LB",
+        "LEFT-BACK": "LB",
+        "LB": "LB",
+
+        "RIGHT BACK": "RB",
+        "RIGHT-BACK": "RB",
+        "RB": "RB",
+
+        "CENTRE BACK": "CB",
+        "CENTER BACK": "CB",
+        "CENTRE-BACK": "CB",
+        "CENTER-BACK": "CB",
+        "CB": "CB",
+
+        "DEFENSIVE MIDFIELDER": "CDM",
+        "DEFENSIVE MID": "CDM",
+        "CDM": "CDM",
+
+        "CENTRAL MIDFIELDER": "CM",
+        "CENTRAL MID": "CM",
+        "CM": "CM",
+
+        "ATTACKING MIDFIELDER": "CAM",
+        "ATTACKING MID": "CAM",
+        "CAM": "CAM",
+
+        "LEFT WING": "LW",
+        "LEFT WINGER": "LW",
+        "LW": "LW",
+
+        "RIGHT WING": "RW",
+        "RIGHT WINGER": "RW",
+        "RW": "RW",
+
+        "STRIKER": "ST",
+        "ST": "ST"
+
+      };
+
+
+      position =
+        positionMap[position] || position;
 
 
       /* CAPTAIN */
@@ -196,7 +249,7 @@ async function loadSquad(){
           </div>
 
           <div class="list-position">
-            ${position || "Position not set"}
+            ${player.positionAssigned || "Position not set"}
           </div>
 
         </div>
@@ -247,21 +300,10 @@ async function loadSquad(){
 
 
     /* =========================
-       GOALKEEPER
-       1 GK = ONE NAME
-       2 GK = NAME / NAME
+       GK
     ========================= */
 
-    if(gks.length === 1){
-
-      document.getElementById(
-        "gkName"
-      ).textContent =
-        gks[0];
-
-    }
-
-    else if(gks.length >= 2){
+    if(gks.length >= 1){
 
       document.getElementById(
         "gkName"
@@ -342,20 +384,6 @@ async function loadSquad(){
 
 
     /* =========================
-       LW
-    ========================= */
-
-    if(playersByPosition.LW[0]){
-
-      document.getElementById(
-        "lwName"
-      ).textContent =
-        playersByPosition.LW[0];
-
-    }
-
-
-    /* =========================
        CAM
     ========================= */
 
@@ -365,6 +393,20 @@ async function loadSquad(){
         "camName"
       ).textContent =
         playersByPosition.CAM[0];
+
+    }
+
+
+    /* =========================
+       LW
+    ========================= */
+
+    if(playersByPosition.LW[0]){
+
+      document.getElementById(
+        "lwName"
+      ).textContent =
+        playersByPosition.LW[0];
 
     }
 
@@ -384,7 +426,7 @@ async function loadSquad(){
 
 
     /* =========================
-       STRIKER 1
+       ST 1
     ========================= */
 
     if(playersByPosition.ST[0]){
@@ -398,7 +440,7 @@ async function loadSquad(){
 
 
     /* =========================
-       STRIKER 2
+       ST 2
     ========================= */
 
     if(playersByPosition.ST[1]){
