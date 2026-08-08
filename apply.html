@@ -1,222 +1,388 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>Victoria FC - Player Application</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,0,0,.16), transparent 35%),
+<title>Victoria FC - Player Application</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(255,0,0,.16),
+            transparent 35%
+        ),
         #000;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
 
-    .box {
-      max-width: 430px;
-      margin: auto;
-      background: rgba(17,17,17,.92);
-      padding: 22px;
-      border-radius: 18px;
-      border: 1px solid #292929;
-    }
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:20px;
+}
 
-    .logo {
-      width: 130px;
-      display: block;
-      margin: 0 auto 10px;
-      filter: drop-shadow(0 0 12px rgba(255,0,0,.3));
-    }
+.box{
+    max-width:430px;
+    margin:auto;
 
-    h1 {
-      text-align: center;
-      color: red;
-      letter-spacing: 3px;
-      margin: 5px 0;
-    }
+    background:rgba(17,17,17,.92);
 
-    h3 {
-      text-align: center;
-      color: #aaa;
-      font-weight: normal;
-      margin-bottom: 25px;
-    }
+    padding:22px;
 
-    input, select, button {
-      width: 100%;
-      padding: 13px;
-      margin: 8px 0;
-      border-radius: 9px;
-      border: 1px solid #292929;
-      background: #0b0b0b;
-      color: white;
-      font-size: 14px;
-    }
+    border-radius:18px;
 
-    input:focus, select:focus {
-      outline: none;
-      border-color: red;
-    }
+    border:1px solid #292929;
 
-    button {
-      background: red;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 15px;
-    }
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.55);
+}
 
-    button:disabled {
-      background: #555;
-      cursor: not-allowed;
-    }
+.logo{
+    width:130px;
+    display:block;
+    margin:0 auto 10px;
 
-    .success {
-      display: none;
-      margin-top: 20px;
-      padding: 15px;
-      background: #101010;
-      border: 1px solid #333;
-      border-radius: 10px;
-      text-align: center;
-    }
+    filter:
+        drop-shadow(
+            0 0 12px rgba(255,0,0,.3)
+        );
+}
 
-    .success strong {
-      color: red;
-      font-size: 20px;
-    }
+h1{
+    text-align:center;
+    color:red;
+    letter-spacing:3px;
+    margin:5px 0;
+}
 
-    .back {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      color: #777;
-      text-decoration: none;
-      font-size: 13px;
-    }
+h3{
+    text-align:center;
+    color:#aaa;
+    font-weight:normal;
+    margin-bottom:25px;
+}
 
-    .required {
-      color: red;
-    }
-  </style>
+input,
+select,
+button{
+    width:100%;
+    padding:13px;
+    margin:8px 0;
+
+    border-radius:9px;
+
+    border:1px solid #292929;
+
+    background:#0b0b0b;
+
+    color:white;
+
+    font-size:14px;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:red;
+
+    box-shadow:
+        0 0 12px rgba(255,0,0,.12);
+}
+
+button{
+    background:red;
+    border:none;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-top:15px;
+
+    transition:.25s;
+}
+
+button:hover{
+    background:#d90000;
+    transform:translateY(-2px);
+}
+
+button:disabled{
+    background:#555;
+    cursor:not-allowed;
+    transform:none;
+}
+
+
+/* SUCCESS */
+
+.success{
+    display:none;
+
+    margin-top:20px;
+    padding:20px;
+
+    background:#101010;
+
+    border:1px solid #333;
+
+    border-radius:10px;
+
+    text-align:center;
+
+    line-height:1.7;
+}
+
+.success-title{
+    color:#ff2020;
+
+    font-size:20px;
+
+    font-weight:bold;
+}
+
+.success-text{
+    color:#aaa;
+
+    font-size:13px;
+
+    margin-top:8px;
+}
+
+
+/* BACK */
+
+.back{
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#777;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    transition:.25s;
+}
+
+.back:hover{
+    color:red;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
+
 <div class="box">
 
-  <img src="logo.png" class="logo" alt="Victoria FC Logo">
 
-  <h1>VICTORIA FC</h1>
-
-  <h3>Player Application Form</h3>
-
-  <form id="applicationForm">
-
-    <input
-      id="name"
-      type="text"
-      placeholder="Full Name"
-      required
+    <img
+        src="logo.png"
+        class="logo"
+        alt="Victoria FC Logo"
     >
 
-    <input
-      id="age"
-      type="number"
-      min="1"
-      placeholder="Age"
-      required
+
+    <h1>
+        VICTORIA FC
+    </h1>
+
+
+    <h3>
+        Player Application Form
+    </h3>
+
+
+    <form id="applicationForm">
+
+
+        <input
+            id="name"
+            type="text"
+            placeholder="Full Name"
+            required
+        >
+
+
+        <input
+            id="age"
+            type="number"
+            min="1"
+            placeholder="Age"
+            required
+        >
+
+
+        <input
+            id="location"
+            type="text"
+            placeholder="Location"
+            required
+        >
+
+
+        <select
+            id="position"
+            required
+        >
+
+            <option value="">
+                Select Position
+            </option>
+
+            <option value="GK">
+                GK
+            </option>
+
+            <option value="DEF">
+                DEF
+            </option>
+
+            <option value="MID">
+                MID
+            </option>
+
+            <option value="FWD">
+                FWD
+            </option>
+
+        </select>
+
+
+        <input
+            id="team"
+            type="text"
+            placeholder="Previous Team"
+            required
+        >
+
+
+        <input
+            id="experience"
+            type="text"
+            placeholder="Experience"
+            required
+        >
+
+
+        <select
+            id="size"
+            required
+        >
+
+            <option value="">
+                Select Jersey Size
+            </option>
+
+            <option value="Small">
+                Small
+            </option>
+
+            <option value="Medium">
+                Medium
+            </option>
+
+            <option value="Large">
+                Large
+            </option>
+
+            <option value="XL">
+                XL
+            </option>
+
+        </select>
+
+
+        <input
+            id="number"
+            type="number"
+            min="1"
+            max="99"
+            placeholder="Preferred Jersey Number"
+            required
+        >
+
+
+        <input
+            id="phone"
+            type="tel"
+            placeholder="Phone / WhatsApp"
+            required
+        >
+
+
+        <input
+            id="instagram"
+            type="text"
+            placeholder="Instagram ID"
+            required
+        >
+
+
+        <button
+            type="submit"
+            id="submitButton"
+        >
+            Submit Application
+        </button>
+
+
+    </form>
+
+
+    <div
+        class="success"
+        id="success"
     >
 
-    <input
-      id="location"
-      type="text"
-      placeholder="Location"
-      required
+        <div class="success-title">
+            Application Submitted Successfully!
+        </div>
+
+        <div class="success-text">
+            Your application has been received.
+            Our team will review it and update
+            your application status.
+        </div>
+
+    </div>
+
+
+    <a
+        href="index.html"
+        class="back"
     >
+        ← Back to Home
+    </a>
 
-    <select id="position" required>
-      <option value="">Select Position</option>
-      <option value="GK">GK</option>
-      <option value="DEF">DEF</option>
-      <option value="MID">MID</option>
-      <option value="FWD">FWD</option>
-    </select>
-
-    <input
-      id="team"
-      type="text"
-      placeholder="Previous Team"
-      required
-    >
-
-    <input
-      id="experience"
-      type="text"
-      placeholder="Experience"
-      required
-    >
-
-    <select id="size" required>
-      <option value="">Select Jersey Size</option>
-      <option value="Small">Small</option>
-      <option value="Medium">Medium</option>
-      <option value="Large">Large</option>
-      <option value="XL">XL</option>
-    </select>
-
-    <input
-      id="number"
-      type="number"
-      min="1"
-      max="99"
-      placeholder="Preferred Jersey Number"
-      required
-    >
-
-    <input
-      id="phone"
-      type="tel"
-      placeholder="Phone / WhatsApp"
-      required
-    >
-
-    <input
-      id="instagram"
-      type="text"
-      placeholder="Instagram ID"
-      required
-    >
-
-    <button type="submit" id="submitButton">
-      Submit Application
-    </button>
-
-  </form>
-
-  <div class="success" id="success">
-    <div>Application Submitted Successfully!</div>
-    <br>
-    <div>Your Application ID:</div>
-    <strong id="applicationId"></strong>
-  </div>
-
-  <a href="index.html" class="back">
-    ← Back to Home
-  </a>
 
 </div>
 
-<script type="module" src="script.js"></script>
+
+<script
+    type="module"
+    src="script.js">
+</script>
+
 
 </body>
+
 </html>
