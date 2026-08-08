@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Victoria FC | Check Application</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    background:#020202;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow-x:hidden;
+}
+
+
+/* BACKGROUND */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:-30%;
+    z-index:-2;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(255,0,45,.14),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(255,0,45,.10),
+            transparent 30%
+        );
+
+    animation:bgMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes bgMove{
+
+    from{
+        transform:translate(-3%,-3%) scale(1);
+    }
+
+    to{
+        transform:translate(3%,3%) scale(1.12);
+    }
+}
+
+
+/* CARD */
+
+.container{
+
+    width:calc(100% - 30px);
+    max-width:480px;
+
+    padding:35px 25px;
+
+    border-radius:22px;
+
+    background:
+        rgba(8,3,4,.82);
+
+    border:
+        1px solid rgba(255,0,45,.22);
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.7),
+        0 0 35px rgba(255,0,45,.05);
+
+    text-align:center;
+}
+
+
+/* TITLE */
+
+.logo{
+
+    font-size:25px;
+    font-weight:1000;
+    letter-spacing:4px;
+}
+
+.logo span{
+    color:#ff1744;
+}
+
+.subtitle{
+
+    margin-top:8px;
+
+    color:#666;
+
+    font-size:9px;
+
+    letter-spacing:3px;
+}
+
+
+/* LINE */
+
+.line{
+
+    width:80%;
+    height:1px;
+
+    margin:25px auto;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ff003c,
+            #fff,
+            #ff003c,
+            transparent
+        );
+
+    box-shadow:
+        0 0 12px rgba(255,0,40,.6);
+}
+
+
+/* INPUT */
+
+label{
+
+    display:block;
+
+    text-align:left;
+
+    color:#888;
+
+    font-size:9px;
+
+    letter-spacing:1.5px;
+
+    margin-bottom:7px;
+}
+
+input{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    border:
+        1px solid rgba(255,0,45,.2);
+
+    outline:none;
+
+    background:
+        rgba(255,255,255,.04);
+
+    color:white;
+
+    font-size:13px;
+}
+
+input:focus{
+
+    border-color:
+        rgba(255,0,45,.6);
+
+    box-shadow:
+        0 0 20px rgba(255,0,45,.08);
+}
+
+
+/* BUTTON */
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+    width:100%;
+
+    margin-top:15px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:10px;
+
+    color:white;
+
+    font-size:9px;
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    cursor:pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d90035,
+            #650016
+        );
+
+    border:
+        1px solid rgba(255,30,70,.6);
+
+    box-shadow:
+        0 0 25px rgba(255,0,50,.15);
+
+    transition:.3s;
+}
+
+button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 35px rgba(255,0,50,.3);
+}
+
+
+/* RESULT */
+
+#result{
+
+    margin-top:22px;
+
+    text-align:left;
+}
+
+.result-card{
+
+    padding:18px;
+
+    border-radius:14px;
+
+    background:
+        rgba(255,255,255,.04);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+}
+
+.result-card h3{
+
+    color:#ff1744;
+
+    font-size:17px;
+
+    margin-bottom:12px;
+}
+
+.result-card p{
+
+    color:#888;
+
+    font-size:11px;
+
+    margin:8px 0;
+}
+
+.result-card strong{
+    color:#fff;
+}
+
+
+/* STATUS */
+
+.status{
+
+    display:inline-block;
+
+    margin-top:10px;
+
+    padding:7px 12px;
+
+    border-radius:20px;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+}
+
+.pending{
+
+    color:#ffaa00;
+
+    background:rgba(255,170,0,.08);
+}
+
+.accepted{
+
+    color:#00ff66;
+
+    background:rgba(0,255,100,.08);
+}
+
+.rejected{
+
+    color:#ff334d;
+
+    background:rgba(255,0,45,.08);
+}
+
+
+/* BACK */
+
+.back{
+
+    display:inline-block;
+
+    margin-top:22px;
+
+    color:#777;
+
+    text-decoration:none;
+
+    font-size:9px;
+
+    letter-spacing:1px;
+
+    transition:.3s;
+}
+
+.back:hover{
+    color:#ff1744;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+    <div class="logo">
+        VICTORIA <span>FC</span>
+    </div>
+
+    <div class="subtitle">
+        CHECK YOUR APPLICATION
+    </div>
+
+
+    <div class="line"></div>
+
+
+    <label for="instagram">
+        INSTAGRAM USERNAME
+    </label>
+
+    <input
+        id="instagram"
+        type="text"
+        placeholder="@yourusername"
+        autocomplete="off"
+    >
+
+
+    <button onclick="checkApplication()">
+        CHECK APPLICATION
+    </button>
+
+
+    <div id="result"></div>
+
+
+    <a href="index.html" class="back">
+        ← BACK TO VICTORIA FC
+    </a>
+
+</div>
+
+
+<script
+    type="module"
+    src="check.js">
+</script>
+
+
+</body>
+</html>
