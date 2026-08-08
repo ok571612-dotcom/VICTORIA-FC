@@ -1,487 +1,911 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  updateDoc,
-  doc
+    getFirestore,
+    collection,
+    getDocs,
+    updateDoc,
+    setDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+/* =========================================
+   FIREBASE
+========================================= */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyB9Hv0YOgxHe4Rz8KIefVa_IApcK0drCQg",
-  authDomain: "victoria-fc-bf995.firebaseapp.com",
-  projectId: "victoria-fc-bf995",
-  storageBucket: "victoria-fc-bf995.firebasestorage.app",
-  messagingSenderId: "608890063019",
-  appId: "1:608890063019:web:56d54e9a5f9a35f07ecfee",
-  measurementId: "G-134SGSZ9TL"
+
+    apiKey:
+        "AIzaSyB9Hv0YOgxHe4Rz8KIefVa_IApcK0drCQg",
+
+    authDomain:
+        "victoria-fc-bf995.firebaseapp.com",
+
+    projectId:
+        "victoria-fc-bf995",
+
+    storageBucket:
+        "victoria-fc-bf995.firebasestorage.app",
+
+    messagingSenderId:
+        "608890063019",
+
+    appId:
+        "1:608890063019:web:56d54e9a5f9a35f07ecfee",
+
+    measurementId:
+        "G-134SGSZ9TL"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-const box =
-  document.getElementById("applications");
+const app =
+    initializeApp(firebaseConfig);
+
+
+const db =
+    getFirestore(app);
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const applicationsBox =
+    document.getElementById("applications");
+
 
 const squadBox =
-  document.getElementById("squadPlayers");
+    document.getElementById("squadPlayers");
 
 
-/* =========================
-   LOAD APPLICATIONS
-========================= */
+/* =========================================
+   LOAD WEBSITE STATS
+========================================= */
+
+async function loadStats(){
+
+    try{
+
+        const statsRef =
+            doc(db,"settings","websiteStats");
+
+        const snapshot =
+            await getDocs(
+                collection(db,"settings")
+            );
+
+        let found = false;
+
+        snapshot.forEach((item)=>{
+
+            if(item.id === "websiteStats"){
+
+                found = true;
+
+                const data =
+                    item.data();
+
+                document.getElementById(
+                    "totalMembers"
+                ).value =
+                    data.totalMembers ?? 0;
+
+
+                document.getElementById(
+                    "matchesPlayed"
+                ).value =
+                    data.matchesPlayed ?? 0;
+
+
+                document.getElementById(
+                    "bestPlayers"
+                ).value =
+                    data.bestPlayers ?? 0;
+
+            }
+
+        });
+
+
+        if(!found){
+
+            document.getElementById(
+                "totalMembers"
+            ).value = 0;
+
+            document.getElementById(
+                "matchesPlayed"
+            ).value = 0;
+
+            document.getElementById(
+                "bestPlayers"
+            ).value = 0;
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showStatsMessage(
+            "Could not load stats.",
+            false
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   SAVE WEBSITE STATS
+========================================= */
+
+window.saveStats =
+async function(){
+
+    const totalMembers =
+        Number(
+            document.getElementById(
+                "totalMembers"
+            ).value
+        );
+
+
+    const matchesPlayed =
+        Number(
+            document.getElementById(
+                "matchesPlayed"
+            ).value
+        );
+
+
+    const bestPlayers =
+        Number(
+            document.getElementById(
+                "bestPlayers"
+            ).value
+        );
+
+
+    if(
+        totalMembers < 0 ||
+        matchesPlayed < 0 ||
+        bestPlayers < 0
+    ){
+
+        showStatsMessage(
+            "Numbers cannot be negative.",
+            false
+        );
+
+        return;
+    }
+
+
+    try{
+
+        await setDoc(
+
+            doc(
+                db,
+                "settings",
+                "websiteStats"
+            ),
+
+            {
+
+                totalMembers:
+                    totalMembers,
+
+                matchesPlayed:
+                    matchesPlayed,
+
+                bestPlayers:
+                    bestPlayers
+
+            }
+
+        );
+
+
+        showStatsMessage(
+            "Website stats saved successfully!",
+            true
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showStatsMessage(
+            "Error saving stats. Check Firebase rules.",
+            false
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showStatsMessage(
+    text,
+    success
+){
+
+    const message =
+        document.getElementById(
+            "statsMessage"
+        );
+
+    message.textContent =
+        text;
+
+    message.className =
+        success
+            ? "message success"
+            : "message error";
+
+}
+
+
+/* =========================================
+   APPLICATIONS
+========================================= */
 
 async function loadApplications(){
 
-  const snapshot =
-    await getDocs(collection(db,"applications"));
+    try{
 
-  box.innerHTML = "";
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "applications"
+                )
+            );
 
-  snapshot.forEach((data)=>{
 
-    const player = data.data();
-    const id = data.id;
+        applicationsBox.innerHTML = "";
 
-    box.innerHTML += `
 
-      <div class="card">
+        if(snapshot.empty){
 
-        <h3>${player.name || "Player"}</h3>
+            applicationsBox.innerHTML = `
+                <div class="card">
+                    No applications found.
+                </div>
+            `;
 
-        <p>Age: ${player.age || "N/A"}</p>
-        <p>Location: ${player.location || "N/A"}</p>
-        <p>Position: ${player.position || "N/A"}</p>
-        <p>Previous Team: ${player.previousTeam || "N/A"}</p>
-        <p>Experience: ${player.experience || "N/A"}</p>
-        <p>Jersey Size: ${player.jerseySize || "N/A"}</p>
-        <p>Jersey Number: ${player.jerseyNumber || "N/A"}</p>
+            return;
+        }
 
-        <p>
-          Status:
-          <span class="status ${
-            player.status === "Accepted"
-              ? "approved"
-              : player.status === "Rejected"
-              ? "rejected"
-              : "pending"
-          }">
-            ${player.status || "Pending"}
-          </span>
-        </p>
 
-        <select id="reason-${id}">
+        snapshot.forEach((item)=>{
 
-          <option value="">
-            Select Reason
-          </option>
+            const player =
+                item.data();
 
-          <option>
-            Welcome to Victoria FC! Your application has been approved.
-          </option>
+            const id =
+                item.id;
 
-          <option>
-            Selected for the squad. Congratulations!
-          </option>
 
-          <option>
-            Your position matches our team requirements.
-          </option>
+            applicationsBox.innerHTML += `
 
-          <option>
-            Welcome to the Victoria FC family.
-          </option>
+                <div class="application-card">
 
-          <option>
-            Approved after team management review.
-          </option>
+                    <h3>
+                        ${player.name || "Player"}
+                    </h3>
 
-          <option>
-            Your playing style fits our team.
-          </option>
+                    <p>
+                        Age:
+                        ${player.age || "N/A"}
+                    </p>
 
-          <option>
-            Your experience meets our requirements.
-          </option>
+                    <p>
+                        Location:
+                        ${player.location || "N/A"}
+                    </p>
 
-          <option>
-            You are selected for upcoming matches.
-          </option>
+                    <p>
+                        Position:
+                        ${player.position || "N/A"}
+                    </p>
 
-          <option>
-            Your registration with Victoria FC is confirmed.
-          </option>
+                    <p>
+                        Previous Team:
+                        ${player.previousTeam || "N/A"}
+                    </p>
 
-          <option>
-            Officially selected as a Victoria FC player.
-          </option>
+                    <p>
+                        Experience:
+                        ${player.experience || "N/A"}
+                    </p>
 
-          <option>
-            Position already filled.
-          </option>
+                    <p>
+                        Jersey Size:
+                        ${player.jerseySize || "N/A"}
+                    </p>
 
-          <option>
-            Team requirements are currently complete.
-          </option>
+                    <p>
+                        Jersey Number:
+                        ${player.jerseyNumber || "N/A"}
+                    </p>
 
-          <option>
-            Not enough experience for current squad.
-          </option>
+                    <p>
+                        Status:
+                        ${player.status || "Pending"}
+                    </p>
 
-          <option>
-            Profile does not match current requirements.
-          </option>
 
-          <option>
-            Age criteria not suitable.
-          </option>
+                    <select
+                        id="reason-${id}">
 
-          <option>
-            Previous team experience required.
-          </option>
+                        <option value="">
+                            Select Reason
+                        </option>
 
-          <option>
-            Application details were incomplete.
-          </option>
+                        <option>
+                            Welcome to Victoria FC! Your application has been approved.
+                        </option>
 
-          <option>
-            Selected players list is full.
-          </option>
+                        <option>
+                            Selected for the squad. Congratulations!
+                        </option>
 
-          <option>
-            Need more improvement before selection.
-          </option>
+                        <option>
+                            Your position matches our team requirements.
+                        </option>
 
-          <option>
-            Other candidates were selected.
-          </option>
+                        <option>
+                            Welcome to the Victoria FC family.
+                        </option>
 
-        </select>
+                        <option>
+                            Approved after team management review.
+                        </option>
 
-        <br>
+                        <option>
+                            Your playing style fits our team.
+                        </option>
 
-        <button
-          class="accept"
-          onclick="updateStatus('${id}','Accepted')">
-          Accept
-        </button>
+                        <option>
+                            Your experience meets our requirements.
+                        </option>
 
-        <button
-          class="reject"
-          onclick="updateStatus('${id}','Rejected')">
-          Reject
-        </button>
+                        <option>
+                            You are selected for upcoming matches.
+                        </option>
 
-      </div>
+                        <option>
+                            Position already filled.
+                        </option>
 
-    `;
+                        <option>
+                            Team requirements are currently complete.
+                        </option>
 
-  });
+                        <option>
+                            Not enough experience for current squad.
+                        </option>
+
+                        <option>
+                            Profile does not match current requirements.
+                        </option>
+
+                        <option>
+                            Age criteria not suitable.
+                        </option>
+
+                        <option>
+                            Other candidates were selected.
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        class="accept"
+                        onclick="
+                            updateStatus(
+                                '${id}',
+                                'Accepted'
+                            )
+                        ">
+
+                        ACCEPT
+
+                    </button>
+
+
+                    <button
+                        class="reject"
+                        onclick="
+                            updateStatus(
+                                '${id}',
+                                'Rejected'
+                            )
+                        ">
+
+                        REJECT
+
+                    </button>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        applicationsBox.innerHTML = `
+            <div class="card">
+                Error loading applications.
+            </div>
+        `;
+
+    }
 
 }
 
 
-/* =========================
+/* =========================================
    ACCEPT / REJECT
-========================= */
+========================================= */
 
 window.updateStatus =
-async function(id,status){
+async function(
+    id,
+    status
+){
 
-  const reason =
-    document.getElementById(
-      "reason-"+id
-    ).value;
+    const reason =
+        document.getElementById(
+            "reason-"+id
+        ).value;
 
-  if(!reason){
 
-    alert(
-      "Please select a reason first."
-    );
+    if(!reason){
 
-    return;
-  }
+        alert(
+            "Please select a reason first."
+        );
 
-  await updateDoc(
-    doc(db,"applications",id),
-    {
-      status:status,
-      reason:reason
+        return;
     }
-  );
 
-  alert("Updated Successfully");
 
-  loadApplications();
+    try{
 
-  loadSquad();
+        await updateDoc(
+
+            doc(
+                db,
+                "applications",
+                id
+            ),
+
+            {
+                status:status,
+                reason:reason
+            }
+
+        );
+
+
+        alert(
+            "Updated Successfully"
+        );
+
+
+        loadApplications();
+
+        loadSquad();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Error updating application."
+        );
+
+    }
+
 };
 
 
-/* =========================
-   LOAD SQUAD MANAGEMENT
-========================= */
+/* =========================================
+   LOAD SQUAD
+========================================= */
 
 async function loadSquad(){
 
-  const snapshot =
-    await getDocs(
-      collection(db,"applications")
-    );
+    try{
 
-  squadBox.innerHTML = "";
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "applications"
+                )
+            );
 
-  let found = false;
 
-  snapshot.forEach((data)=>{
+        squadBox.innerHTML = "";
 
-    const player = data.data();
-    const id = data.id;
 
-    if(player.status !== "Accepted"){
-      return;
+        let found = false;
+
+
+        snapshot.forEach((item)=>{
+
+            const player =
+                item.data();
+
+            const id =
+                item.id;
+
+
+            if(
+                player.status !== "Accepted"
+            ){
+
+                return;
+
+            }
+
+
+            found = true;
+
+
+            squadBox.innerHTML += `
+
+                <div class="application-card">
+
+                    <h3>
+                        ${player.name || "Player"}
+                    </h3>
+
+                    <p>
+                        Current Position:
+                        ${player.positionAssigned || "Not assigned"}
+                    </p>
+
+                    <p>
+                        Role:
+                        ${player.role || "Player"}
+                    </p>
+
+
+                    <select
+                        id="position-${id}">
+
+                        <option value="">
+                            Select Position
+                        </option>
+
+                        <option>GK</option>
+                        <option>Left Back</option>
+                        <option>Right Back</option>
+                        <option>Centre Back</option>
+                        <option>Defensive Midfielder</option>
+                        <option>Central Midfielder</option>
+                        <option>Attacking Midfielder</option>
+                        <option>Left Wing</option>
+                        <option>Right Wing</option>
+                        <option>Striker</option>
+
+                    </select>
+
+
+                    <select
+                        id="role-${id}">
+
+                        <option value="Player">
+                            Player
+                        </option>
+
+                        <option value="Captain">
+                            Captain
+                        </option>
+
+                        <option value="Vice Captain">
+                            Vice Captain
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        onclick="
+                            addToSquad('${id}')
+                        ">
+
+                        ADD / UPDATE SQUAD
+
+                    </button>
+
+
+                    <button
+                        class="remove"
+                        onclick="
+                            removeFromSquad('${id}')
+                        ">
+
+                        REMOVE FROM SQUAD
+
+                    </button>
+
+                </div>
+
+            `;
+
+        });
+
+
+        if(!found){
+
+            squadBox.innerHTML = `
+
+                <div class="card">
+
+                    No approved players yet.
+
+                </div>
+
+            `;
+
+        }
+
     }
+    catch(error){
 
-    found = true;
+        console.error(error);
 
-    squadBox.innerHTML += `
+        squadBox.innerHTML = `
+            <div class="card">
+                Error loading squad.
+            </div>
+        `;
 
-      <div class="card">
-
-        <h3>${player.name || "Player"}</h3>
-
-        <p>
-          Age: ${player.age || "N/A"}
-        </p>
-
-        <p>
-          Current Position:
-          ${player.positionAssigned || "Not assigned"}
-        </p>
-
-        <p>
-          Role:
-          ${player.role || "Player"}
-        </p>
-
-        <select id="position-${id}">
-
-          <option value="">
-            Select Position
-          </option>
-
-          <option>GK</option>
-          <option>Left Back</option>
-          <option>Right Back</option>
-          <option>Centre Back</option>
-          <option>Defensive Midfielder</option>
-          <option>Central Midfielder</option>
-          <option>Attacking Midfielder</option>
-          <option>Left Wing</option>
-          <option>Right Wing</option>
-          <option>Striker</option>
-
-        </select>
-
-        <select id="role-${id}">
-
-          <option value="Player">
-            Player
-          </option>
-
-          <option value="Captain">
-            Captain
-          </option>
-
-          <option value="Vice Captain">
-            Vice Captain
-          </option>
-
-        </select>
-
-        <button
-          class="squad"
-          onclick="addToSquad('${id}')">
-
-          Add / Update Squad
-
-        </button>
-
-        <button
-          class="remove"
-          onclick="removeFromSquad('${id}')">
-
-          Remove From Squad
-
-        </button>
-
-      </div>
-
-    `;
-
-  });
-
-  if(!found){
-
-    squadBox.innerHTML = `
-      <div class="card">
-        No approved players yet.
-      </div>
-    `;
-  }
+    }
 
 }
 
 
-/* =========================
+/* =========================================
    ADD / UPDATE SQUAD
-========================= */
+========================================= */
 
 window.addToSquad =
 async function(id){
 
-  const position =
-    document.getElementById(
-      "position-"+id
-    ).value;
+    const position =
+        document.getElementById(
+            "position-"+id
+        ).value;
 
-  const role =
-    document.getElementById(
-      "role-"+id
-    ).value;
 
-  if(!position){
+    const role =
+        document.getElementById(
+            "role-"+id
+        ).value;
 
-    alert(
-      "Please select a position."
-    );
 
-    return;
-  }
+    if(!position){
 
-  /*
-    If Captain is selected,
-    remove Captain role from
-    all other players.
-  */
-
-  if(role === "Captain"){
-
-    const snapshot =
-      await getDocs(
-        collection(db,"applications")
-      );
-
-    for(const item of snapshot.docs){
-
-      const player =
-        item.data();
-
-      if(player.role === "Captain"){
-
-        await updateDoc(
-          doc(
-            db,
-            "applications",
-            item.id
-          ),
-          {
-            role:"Player"
-          }
+        alert(
+            "Please select a position."
         );
 
-      }
-
+        return;
     }
 
-  }
+
+    try{
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "applications"
+                )
+            );
 
 
-  /*
-    If Vice Captain is selected,
-    remove Vice Captain role
-    from all other players.
-  */
+        /*
+           ONLY ONE CAPTAIN
+        */
 
-  if(role === "Vice Captain"){
+        if(role === "Captain"){
 
-    const snapshot =
-      await getDocs(
-        collection(db,"applications")
-      );
+            for(
+                const item
+                of snapshot.docs
+            ){
 
-    for(const item of snapshot.docs){
+                if(
+                    item.id !== id &&
+                    item.data().role === "Captain"
+                ){
 
-      const player =
-        item.data();
+                    await updateDoc(
 
-      if(player.role === "Vice Captain"){
+                        doc(
+                            db,
+                            "applications",
+                            item.id
+                        ),
+
+                        {
+                            role:"Player"
+                        }
+
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /*
+           ONLY ONE VICE CAPTAIN
+        */
+
+        if(
+            role === "Vice Captain"
+        ){
+
+            for(
+                const item
+                of snapshot.docs
+            ){
+
+                if(
+                    item.id !== id &&
+                    item.data().role ===
+                        "Vice Captain"
+                ){
+
+                    await updateDoc(
+
+                        doc(
+                            db,
+                            "applications",
+                            item.id
+                        ),
+
+                        {
+                            role:"Player"
+                        }
+
+                    );
+
+                }
+
+            }
+
+        }
+
 
         await updateDoc(
-          doc(
-            db,
-            "applications",
-            item.id
-          ),
-          {
-            role:"Player"
-          }
+
+            doc(
+                db,
+                "applications",
+                id
+            ),
+
+            {
+
+                inSquad:true,
+
+                positionAssigned:
+                    position,
+
+                role:role
+
+            }
+
         );
 
-      }
+
+        alert(
+            "Squad updated successfully!"
+        );
+
+
+        loadSquad();
 
     }
+    catch(error){
 
-  }
+        console.error(error);
 
+        alert(
+            "Error updating squad."
+        );
 
-  await updateDoc(
-    doc(db,"applications",id),
-    {
-      inSquad:true,
-      positionAssigned:position,
-      role:role
     }
-  );
-
-  alert(
-    "Squad updated successfully!"
-  );
-
-  loadSquad();
 
 };
 
 
-/* =========================
+/* =========================================
    REMOVE FROM SQUAD
-========================= */
+========================================= */
 
 window.removeFromSquad =
 async function(id){
 
-  await updateDoc(
-    doc(db,"applications",id),
-    {
-      inSquad:false,
-      positionAssigned:"",
-      role:"Player"
+    try{
+
+        await updateDoc(
+
+            doc(
+                db,
+                "applications",
+                id
+            ),
+
+            {
+
+                inSquad:false,
+
+                positionAssigned:"",
+
+                role:"Player"
+
+            }
+
+        );
+
+
+        alert(
+            "Player removed from squad."
+        );
+
+
+        loadSquad();
+
     }
-  );
+    catch(error){
 
-  alert(
-    "Player removed from squad."
-  );
+        console.error(error);
 
-  loadSquad();
+        alert(
+            "Error removing player."
+        );
+
+    }
 
 };
 
 
-/* =========================
+/* =========================================
    START
-========================= */
+========================================= */
+
+loadStats();
 
 loadApplications();
 
