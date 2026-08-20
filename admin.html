@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Victoria FC — Admin Panel</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050505;color:#fff;font-family:Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.login{min-height:100vh;display:grid;place-items:center}
+.card,.panel{background:#0d0d10;border:1px solid #25252a;border-radius:14px}.card{width:min(420px,92%);padding:28px}
+.logo{font-weight:900;font-size:22px}.logo span{color:#ff1838}.muted{color:#999;font-size:12px}
+.field{margin:12px 0}.field label{display:block;color:#aaa;font-size:10px;font-weight:800;margin-bottom:6px}
+input,select,textarea{width:100%;background:#08080a;color:#fff;border:1px solid #29292e;border-radius:9px;padding:10px}
+.btn{background:#121216;color:#fff;border:1px solid #36363c;border-radius:8px;padding:9px 12px;font-weight:800;font-size:10px}.red{background:#e91436;border-color:#ff3b5a}
+.err{color:#ff7185;font-size:11px;margin-top:9px;white-space:pre-wrap}
+#app{display:none}.top{height:64px;padding:0 20px;background:#08080a;border-bottom:1px solid #19191d;display:flex;align-items:center;justify-content:space-between}
+.layout{display:flex;min-height:calc(100vh - 64px)}.side{width:210px;background:#08080a;border-right:1px solid #19191d;padding:14px}.nav{width:100%;border:0;background:none;color:#aaa;text-align:left;padding:11px;border-radius:8px;margin-bottom:3px}.nav.active,.nav:hover{background:#18181c;color:#fff}
+.content{flex:1;padding:22px;overflow:auto}.page{display:none}.page.active{display:block}.panel{padding:17px;margin:14px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
+.list{display:grid;gap:7px}.player{background:#111114;border:1px solid #222227;border-radius:8px;padding:9px;font-size:11px}
+.badge{display:inline-block;padding:4px 7px;border-radius:20px;font-size:8px}.pending{background:#332700;color:#ffc64a}.approved{background:#082d1d;color:#55e99b}.rejected{background:#350b12;color:#ff657b}
+table{width:100%;border-collapse:collapse;min-width:900px}th,td{padding:9px;border-bottom:1px solid #222227;text-align:left;font-size:10px}th{font-size:8px;color:#888}.table{overflow:auto}
+.form-card{background:#0a0a0c;border:1px solid #222227;border-radius:11px;padding:14px;margin-top:12px}.formation-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.formation-option{padding:12px;border:1px solid #333;border-radius:9px;background:#0b0b0e}.formation-option.active{border-color:#ff2947;background:#21080d}
+.toast{display:none;position:fixed;right:18px;bottom:18px;background:#17171b;border:1px solid #444;padding:11px;border-radius:9px;font-size:10px}.toast.show{display:block}
+@media(max-width:700px){.side{width:60px}.nav{font-size:0;text-align:center}.content{padding:14px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.formation-options{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section class="login" id="login"><div class="card"><form id="loginForm" novalidate>
+<div class="logo">VICTORIA <span>FC</span></div><p class="muted">Administrator Portal</p>
+<div class="field"><label>ADMIN EMAIL</label><input id="email" type="email" autocomplete="username"></div>
+<div class="field"><label>PASSWORD</label><input id="password" type="password" autocomplete="current-password"></div>
+<button type="submit" class="btn red" id="loginBtn" style="width:100%">SIGN IN</button><div id="loginError" class="err"></div>
+</form></div></section>
+
+<section id="app">
+<header class="top"><div class="logo">VICTORIA <span>FC</span> <small class="muted">ADMIN</small></div>
+<div><a class="btn" href="index.html">PUBLIC SITE</a> <button class="btn" id="logout">LOG OUT</button></div></header>
+<div class="layout"><aside class="side">
+<button class="nav active" data-page="dashboard">Dashboard</button>
+<button class="nav" data-page="applications">Applications</button>
+<button class="nav" data-page="squad">Squad</button>
+<button class="nav" data-page="formations">Formations</button>
+<button class="nav" data-page="settings">Settings</button>
+</aside><main class="content">
+
+<section class="page active" id="dashboard"><h1>Dashboard</h1><p class="muted">Victoria FC management.</p>
+<div class="panel">Applications: <b id="total">0</b> &nbsp; Pending: <b id="pending">0</b> &nbsp; Approved: <b id="approved">0</b> &nbsp; Members: <b id="members">0</b></div></section>
+
+<section class="page" id="applications"><h1>Applications</h1>
+<div class="panel"><input id="search" placeholder="Search name / Instagram / phone"><div class="table"><table>
+<thead><tr><th>Name</th><th>Age</th><th>Instagram</th><th>Phone</th><th>Position</th><th>Jersey</th><th>Previous Team</th><th>Squad</th><th>Status</th><th>Action</th></tr></thead>
+<tbody id="apps"></tbody></table></div></div></section>
+
+<section class="page" id="squad"><h1>Squad Management</h1>
+<div class="panel"><div class="grid">
+<div class="field"><label>PLAYER NAME</label><input id="pname"></div>
+<div class="field"><label>TEAM</label><select id="team"><option value="6a">6A SIDE</option><option value="11a">11A SIDE</option></select></div>
+<div class="field"><label>ROLE</label><select id="role"><option value="field">Starting Player</option><option value="captain">Captain</option><option value="vc">Vice Captain</option><option value="sub">Substitute</option></select></div>
+<div class="field"><label>POSITION</label><select id="pos"></select></div>
+<div class="full"><button class="btn red" id="addPlayer">SAVE PLAYER</button></div>
+</div></div>
+<div class="panel"><h3>6A SIDE</h3><div id="sixList" class="list"></div></div>
+<div class="panel"><h3>11A SIDE</h3><div id="elevenList" class="list"></div></div>
+</section>
+
+<section class="page" id="formations"><h1>Formation Manager</h1>
+<p class="muted">Choose Attacking, Balanced or Defensive. You can also save one custom formation for each side.</p>
+<div class="form-card"><h3>6A</h3><div class="formation-options" id="sixFormationOptions"></div>
+<div class="field"><label>CUSTOM 6A FORMATION</label><input id="sixCustomName" placeholder="Custom 6A name">
+<textarea id="sixCustomSlots" rows="6" placeholder="GK&#10;DEF&#10;DEF&#10;MID&#10;ATT&#10;ATT"></textarea></div>
+<button class="btn red" id="save6Custom">SAVE CUSTOM 6A</button></div>
+<div class="form-card"><h3>11A</h3><div class="formation-options" id="elevenFormationOptions"></div>
+<div class="field"><label>CUSTOM 11A FORMATION</label><input id="elevenCustomName" placeholder="Custom 11A name">
+<textarea id="elevenCustomSlots" rows="11" placeholder="GK&#10;RB&#10;CB&#10;LB&#10;CDM&#10;CM&#10;CAM&#10;RW&#10;LW&#10;ST"></textarea></div>
+<button class="btn red" id="save11Custom">SAVE CUSTOM 11A</button></div>
+</section>
+
+<section class="page" id="settings"><h1>Settings</h1>
+<div class="panel"><div class="grid">
+<div class="field"><label>TOTAL TEAM MEMBERS</label><input id="totalMembers" type="number"></div>
+<div class="field"><label>6A MATCH PLAYERS</label><input id="match6" type="number"></div>
+<div class="field"><label>11A MATCH PLAYERS</label><input id="match11" type="number"></div>
+<div class="field"><label>BEST PLAYER</label><input id="mvp"></div>
+<div class="field full"><label>POSITION LABELS — ONE PER LINE</label><textarea id="labels" rows="8"></textarea></div>
+<div class="field full"><label>ACCEPT REASONS</label><textarea id="acceptReasons" rows="6"></textarea></div>
+<div class="field full"><label>REJECT REASONS</label><textarea id="rejectReasons" rows="6"></textarea></div>
+<div class="full"><button class="btn red" id="saveSettings">SAVE SETTINGS</button></div>
+</div></div></section>
+</main></div></section><div id="toast" class="toast"></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import {getFirestore,collection,getDocs,doc,getDoc,setDoc,updateDoc,query,orderBy} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyC69Kn1QWhUhpGiAqMYs1o6Vrl4pgq10OA",authDomain:"victori4-fc.firebaseapp.com",projectId:"victori4-fc",storageBucket:"victori4-fc.firebasestorage.app",messagingSenderId:"337858940725",appId:"1:337858940725:web:4da5b6d8b841fd64d5467c",measurementId:"G-57SN4JXD8Z"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
+
+const POS6=["GK","DEF","MID","ATT"];
+const POS11=["GK","RB","CB","LB","RWB","LWB","CDM","CM","CAM","RM","LM","RW","LW","ST","CF"];
+const POSLABEL=["GK — Goalkeeper","DEF — Defender","MID — Midfielder","ATT — Attacker/Forward","RB — Right Back","CB — Centre Back","LB — Left Back","RWB — Right Wing Back","LWB — Left Wing Back","CDM — Defensive Midfielder","CM — Central Midfielder","CAM — Attacking Midfielder","RM — Right Midfielder","LM — Left Midfielder","RW — Right Wing","LW — Left Wing","ST — Striker","CF — Centre Forward"];
+const ACCEPT=["Strong football ability","Good attitude","Good team fit","Good technical skills","Position fits squad needs","Committed to practice sessions","Good communication","Previous experience is suitable","Good pace and fitness","Recommended for squad"];
+const REJECT=["Insufficient football experience","Position not currently needed","Poor availability","Does not meet squad requirements","Incomplete player profile","Previous experience not suitable","Fitness level needs improvement","Limited commitment to practices","Squad is currently full","Other / management decision"];
+
+const FORMATIONS={
+ six:{
+  attacking:["GK","DEF","MID","ATT","ATT","ATT"],
+  balanced:["GK","DEF","DEF","MID","ATT","ATT"],
+  defensive:["GK","DEF","DEF","MID","MID","ATT"]
+ },
+ eleven:{
+  attacking:["GK","RB","CB","LB","CDM","CM","CAM","RW","LW","ST","CF"],
+  balanced:["GK","RB","CB","LB","CDM","CM","CAM","RW","LW","ST","RM"],
+  defensive:["GK","RB","CB","LB","CDM","CDM","CM","LM","RM","ST","CF"]
+ }
+};
+const empty={6a:{players:[],captain:"",vc:"",subs:[]},11a:{players:[],captain:"",vc:"",subs:[]}};
+
+function toast(x){$("toast").textContent=x;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1800)}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+
+async function doLogin(e){
+ if(e)e.preventDefault();
+ const email=$("email").value.trim(),pass=$("password").value;
+ const err=$("loginError"),btn=$("loginBtn");
+ err.textContent="";
+ if(!email||!pass){err.textContent="Enter admin email and password.";return false}
+ btn.disabled=true;btn.textContent="SIGNING IN...";
+ try{
+   if(!auth) throw new Error("Firebase Authentication did not initialize.");
+   await signInWithEmailAndPassword(auth,email,pass);
+ }catch(e){
+   console.error("LOGIN ERROR",e);
+   err.textContent=(e.code||"unknown-error")+"\\n"+(e.message||"Login failed.");
+ }finally{
+   btn.disabled=false;btn.textContent="SIGN IN";
+ }
+ return false;
+}
+$("loginForm").addEventListener("submit",doLogin);
+$("logout").onclick=()=>signOut(auth);
+
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));$(b.dataset.page).classList.add("active");b.classList.add("active");if(b.dataset.page==="squad")loadSquad();if(b.dataset.page==="formations")loadFormations()});
+
+async function settings(){const x=await getDoc(doc(db,"settings","public"));return x.exists()?x.data():{activeFormation:{six:"balanced",eleven:"balanced"},positionLabels:POSLABEL,totalTeamMembers:0,matchPlayers6a:6,matchPlayers11a:11,acceptReasons:ACCEPT,rejectReasons:REJECT}}
+async function squad(){const x=await getDoc(doc(db,"squad","data"));return x.exists()?x.data():structuredClone(empty)}
+
+function fillPositions(){
+ const side=$("team").value;
+ const arr=side==="6a"?POS6:POS11;
+ $("pos").innerHTML=arr.map(x=>`<option value="${x}">${x}</option>`).join("");
+}
+$("team").onchange=fillPositions;fillPositions();
+
+$("addPlayer").onclick=async()=>{
+ try{
+  const name=$("pname").value.trim();if(!name){toast("Enter player name");return}
+  const t=$("team").value,r=$("role").value,p=$("pos").value,s=await squad();
+  s[t]=s[t]||structuredClone(empty[t]);
+  if(r==="field"){let q=s[t].players.find(x=>x.name===name);if(q)q.pos=p;else s[t].players.push({name,pos:p})}
+  if(r==="captain"){s[t].captain=name;s[t].players=s[t].players.filter(x=>x.name!==name);s[t].subs=s[t].subs.filter(x=>(typeof x==="string"?x:x.name)!==name)}
+  if(r==="vc"){s[t].vc=name;s[t].players=s[t].players.filter(x=>x.name!==name);s[t].subs=s[t].subs.filter(x=>(typeof x==="string"?x:x.name)!==name)}
+  if(r==="sub"){s[t].subs=s[t].subs.filter(x=>(typeof x==="string"?x:x.name)!==name);s[t].subs.push({name,pos:p});s[t].players=s[t].players.filter(x=>x.name!==name)}
+  await setDoc(doc(db,"squad","data"),s);
+  $("pname").value="";toast("Player saved");loadSquad();
+ }catch(e){alert("SAVE FAILED\\n"+(e.code||"unknown")+"\\n"+e.message)}
+};
+
+async function loadSquad(){
+ const s=await squad();let total=0;
+ for(const [t,id] of [["6a","sixList"],["11a","elevenList"]]){
+  const x=s[t]||empty[t];let h="";
+  if(x.captain)h+=`<div class="player"><b>${esc(x.captain)}</b> — CAPTAIN</div>`;
+  if(x.vc)h+=`<div class="player"><b>${esc(x.vc)}</b> — VICE CAPTAIN</div>`;
+  (x.players||[]).forEach(p=>h+=`<div class="player"><b>${esc(p.name)}</b> — ${esc(p.pos||"POSITION NOT SET")}</div>`);
+  (x.subs||[]).forEach(p=>h+=`<div class="player"><b>${esc(typeof p==="string"?p:p.name)}</b> — ${esc(p.pos||"SUBSTITUTE")}</div>`);
+  $(id).innerHTML=h||'<span class="muted">No players assigned.</span>';
+  total+=(x.players||[]).length+(x.subs||[]).length+(x.captain?1:0)+(x.vc?1:0);
+ }
+ $("members").textContent=total;
+}
+
+function optionCards(side,active){
+ const obj=FORMATIONS[side],container=$(side==="six"?"sixFormationOptions":"elevenFormationOptions");
+ container.innerHTML=Object.entries(obj).map(([key,slots])=>`<button class="formation-option ${key===active?"active":""}" data-form="${key}"><b>${key.toUpperCase()}</b><br><small>${slots.join(" • ")}</small></button>`).join("");
+ container.querySelectorAll("[data-form]").forEach(b=>b.onclick=async()=>{
+  const s=await settings();s.activeFormation=s.activeFormation||{six:"balanced",eleven:"balanced"};s.activeFormation[side]=b.dataset.form;
+  await setDoc(doc(db,"settings","public"),s);toast(side.toUpperCase()+" "+b.dataset.form+" formation active");loadFormations();
+ });
+}
+async function loadFormations(){
+ const s=await settings(),a=s.activeFormation||{six:"balanced",eleven:"balanced"};
+ optionCards("six",a.six||"balanced");optionCards("eleven",a.eleven||"balanced");
+}
+$("save6Custom").onclick=async()=>{const s=await settings();s.customFormation6={name:$("sixCustomName").value.trim()||"Custom 6A",slots:$("sixCustomSlots").value.split(/\n/).map(x=>x.trim()).filter(Boolean)};await setDoc(doc(db,"settings","public"),s);toast("Custom 6A saved")};
+$("save11Custom").onclick=async()=>{const s=await settings();s.customFormation11={name:$("elevenCustomName").value.trim()||"Custom 11A",slots:$("elevenCustomSlots").value.split(/\n/).map(x=>x.trim()).filter(Boolean)};await setDoc(doc(db,"settings","public"),s);toast("Custom 11A saved")};
+
+async function loadSettings(){
+ const s=await settings();
+ $("totalMembers").value=s.totalTeamMembers??0;$("match6").value=s.matchPlayers6a??6;$("match11").value=s.matchPlayers11a??11;$("mvp").value=s.bestPlayer||"MVP";
+ $("labels").value=(s.positionLabels||POSLABEL).join("\\n");$("acceptReasons").value=(s.acceptReasons||ACCEPT).join("\\n");$("rejectReasons").value=(s.rejectReasons||REJECT).join("\\n");
+}
+$("saveSettings").onclick=async()=>{
+ try{
+  const s=await settings();s.totalTeamMembers=Number($("totalMembers").value)||0;s.matchPlayers6a=Number($("match6").value)||6;s.matchPlayers11a=Number($("match11").value)||11;s.bestPlayer=$("mvp").value.trim()||"MVP";
+  s.positionLabels=$("labels").value.split(/\n/).map(x=>x.trim()).filter(Boolean);s.acceptReasons=$("acceptReasons").value.split(/\n/).map(x=>x.trim()).filter(Boolean);s.rejectReasons=$("rejectReasons").value.split(/\n/).map(x=>x.trim()).filter(Boolean);
+  await setDoc(doc(db,"settings","public"),s);toast("Settings saved");
+ }catch(e){alert("SETTINGS SAVE FAILED\\n"+(e.code||"unknown")+"\\n"+e.message)}
+};
+
+async function apps(){
+ try{
+  const snap=await getDocs(query(collection(db,"applications"),orderBy("createdAt","desc")));const a=snap.docs.map(d=>({id:d.id,...d.data()}));
+  $("total").textContent=a.length;$("pending").textContent=a.filter(x=>!["Approved","Rejected"].includes(x.status)).length;$("approved").textContent=a.filter(x=>x.status==="Approved").length;
+  renderApps(a);
+ }catch(e){$("apps").innerHTML=`<tr><td colspan="10">ERROR: ${esc(e.code||"unknown")} — ${esc(e.message)}</td></tr>`}
+}
+function renderApps(a){$("apps").innerHTML=a.length?a.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.age)}</td><td>${esc(x.instagram)}</td><td>${esc(x.phone)}</td><td>${esc(x.playingPosition)}</td><td>${esc(x.jerseyNumber)}</td><td>${esc(x.previousTeam)}</td><td>${esc((x.squads||[]).join(" + "))}</td><td>${esc(x.status)}</td><td><button class="btn" onclick="statusUpdate('${x.id}','Approved')">ACCEPT</button> <button class="btn" onclick="statusUpdate('${x.id}','Rejected')">REJECT</button></td></tr>`).join(""):"<tr><td colspan='10'>No applications.</td></tr>"}
+window.statusUpdate=async(id,status)=>{try{const s=await settings(),r=status==="Approved"?(s.acceptReasons||ACCEPT):(s.rejectReasons||REJECT);const q=prompt(r.map((x,i)=>`${i+1}. ${x}`).join("\\n")+"\\n\\nEnter number or custom reason:");if(q===null)return;const n=Number(q),reason=Number.isInteger(n)&&n>=1&&n<=r.length?r[n-1]:q.trim();await updateDoc(doc(db,"applications",id),{status,reason});toast(status+" saved");apps()}catch(e){alert("UPDATE FAILED\\n"+e.message)}};
+
+$("search").oninput=async()=>{const q=$("search").value.toLowerCase();const snap=await getDocs(query(collection(db,"applications"),orderBy("createdAt","desc")));const a=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>(`${x.name||""} ${x.instagram||""} ${x.phone||""}`).toLowerCase().includes(q));renderApps(a)};
+
+onAuthStateChanged(auth,u=>{if(u){$("login").style.display="none";$("app").style.display="block";apps();loadSquad();loadFormations();loadSettings()}else{$("login").style.display="grid";$("app").style.display="none"}});
+</script>
+</body></html>
